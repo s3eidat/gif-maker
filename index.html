@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>GIF Maker — Make Animated GIFs from Images or Video | S3eidat Tools</title>
+<meta name="description" content="Make animated GIFs from photos or a video clip in your browser. Reorder frames, per-frame delay, resize, loop, reverse, boomerang, dithering and palette options. Free, private, nothing uploaded.">
+<meta property="og:title" content="GIF Maker — free, private animated GIF maker">
+<meta property="og:description" content="Turn images or a short video clip into an animated GIF. Runs 100% in your browser.">
+<link rel="icon" href="kit/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="kit/kit.css">
+<link rel="stylesheet" href="app.css">
+<script src="kit/kit.js"></script>
+<!--s3:seo-->
+<link rel="canonical" href="https://s3eidat.github.io/gif-maker/">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0d0f12">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="S3eidat Tools">
+<meta property="og:url" content="https://s3eidat.github.io/gif-maker/">
+<meta property="og:image" content="https://s3eidat.github.io/gif-maker/screenshot.png">
+<meta property="og:image:width" content="1280"><meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="GIF Maker — Make animated GIFs from images or video">
+<meta name="twitter:description" content="Make animated GIFs from images or video. Free, private and runs 100% in your browser: no sign-up, no uploads.">
+<meta name="twitter:image" content="https://s3eidat.github.io/gif-maker/screenshot.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "GIF Maker", "url": "https://s3eidat.github.io/gif-maker/", "description": "Make animated GIFs from images or video. Free, private and runs 100% in your browser: no sign-up, no uploads.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "image": "https://s3eidat.github.io/gif-maker/screenshot.png", "author": {"@type": "Person", "name": "s3eidat", "url": "https://github.com/s3eidat"}}</script>
+<!--/s3:seo-->
+</head>
+<body data-tool="gif-maker">
+<main class="s3-main">
+  <section class="s3-hero">
+    <h1>GIF Maker</h1>
+    <p>Make an animated GIF from a few images or a short video clip. Reorder frames, set the timing, loop, reverse or boomerang, then download. Everything is encoded on your device.</p>
+  </section>
+
+  <div class="gm-grid">
+    <div class="stack gm-left">
+      <section class="card stack">
+        <div class="row between">
+          <h2>Source</h2>
+          <div class="seg" id="srcMode" role="group" aria-label="Source">
+            <button aria-pressed="true" data-v="images">Images</button>
+            <button aria-pressed="false" data-v="video">Video</button>
+          </div>
+        </div>
+        <label class="drop gm-drop" id="dropImages">
+          <input type="file" accept="image/*" multiple hidden>
+          <svg class="i"><use href="#i-image"/></svg>
+          <b>Drop images here</b>
+          <span class="faint">PNG, JPG, WebP, GIF (first frame) · added in name order</span>
+        </label>
+        <div class="stack" id="videoPane" hidden>
+          <label class="drop gm-drop" id="dropVideo">
+            <input type="file" accept="video/*" hidden>
+            <svg class="i"><use href="#i-play"/></svg>
+            <b>Drop a video here</b>
+            <span class="faint">MP4, WebM, MOV (whatever your browser can play)</span>
+          </label>
+          <div class="stack" id="videoCtl" hidden>
+            <video id="video" controls muted playsinline preload="auto"></video>
+            <div class="grid-3">
+              <label class="field">Start (s)<input class="input" type="number" id="vStart" min="0" step="0.1" value="0"></label>
+              <label class="field">End (s)<input class="input" type="number" id="vEnd" min="0" step="0.1" value="3"></label>
+              <label class="field">Frames / s
+                <select class="select" id="vFps"><option>5</option><option>8</option><option selected>10</option><option>12</option><option>15</option><option>20</option><option>25</option><option>30</option></select>
+              </label>
+            </div>
+            <div class="row">
+              <button class="btn small" id="setStart">Start = current time</button>
+              <button class="btn small" id="setEnd">End = current time</button>
+              <span class="grow"></span>
+              <span class="faint" id="vInfo"></span>
+            </div>
+            <button class="btn primary" id="extract"><svg class="i"><use href="#i-grid"/></svg>Extract frames</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="row between">
+          <h2>Frames <small id="fcount"></small></h2>
+          <div class="row">
+            <label class="gm-inline">Delay for all <input class="input" type="number" id="allDelay" min="20" max="10000" step="10" value="100"> ms</label>
+            <button class="btn small" id="applyDelay">Apply</button>
+            <button class="btn ghost small" id="clearFrames" disabled><svg class="i"><use href="#i-trash"/></svg>Clear</button>
+          </div>
+        </div>
+        <div class="empty" id="framesEmpty"><b>No frames yet</b>Add images or extract frames from a video. Drag frames to reorder them.</div>
+        <ol class="gm-frames" id="frames"></ol>
+      </section>
+    </div>
+
+    <section class="card stack gm-right">
+      <h2>GIF</h2>
+      <div class="grid-2">
+        <label class="field">Width (px)<input class="input" type="number" id="width" min="16" max="1600" step="1" value="480"></label>
+        <label class="field">Repeat
+          <select class="select" id="loop">
+            <option value="0">Loop forever</option>
+            <option value="-1">Play once</option>
+            <option value="1">Play 2 times</option>
+            <option value="2">Play 3 times</option>
+            <option value="4">Play 5 times</option>
+          </select>
+        </label>
+      </div>
+      <div class="row">
+        <div class="seg" id="fit" role="group" aria-label="Fit frames">
+          <button aria-pressed="true" data-v="contain">Fit</button>
+          <button aria-pressed="false" data-v="cover">Crop to fill</button>
+        </div>
+        <label class="gm-inline" title="Background for Fit">Background <input type="color" id="bg" value="#ffffff"></label>
+      </div>
+      <div class="row">
+        <label class="check"><input type="checkbox" id="reverse"> Reverse</label>
+        <label class="check"><input type="checkbox" id="boomerang"> Boomerang</label>
+        <label class="check"><input type="checkbox" id="dither" checked> Dithering</label>
+      </div>
+      <div class="grid-2">
+        <div class="field"><span id="qL">Palette method</span>
+          <div class="seg" id="quant" role="group" aria-labelledby="qL">
+            <button aria-pressed="true" data-v="median">Median cut</button>
+            <button aria-pressed="false" data-v="octree">Octree</button>
+          </div>
+        </div>
+        <label class="field">Colours
+          <select class="select" id="colors"><option>256</option><option>128</option><option>64</option><option>32</option><option>16</option></select>
+        </label>
+      </div>
+      <div class="field"><span id="pL">Palette</span>
+        <div class="seg" id="palMode" role="group" aria-labelledby="pL">
+          <button aria-pressed="true" data-v="shared">One for all frames</button>
+          <button aria-pressed="false" data-v="frame">Per frame</button>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn primary big" id="make" disabled><svg class="i"><use href="#i-play"/></svg>Make GIF</button>
+        <button class="btn ghost" id="cancel" hidden>Cancel</button>
+        <span class="grow"></span>
+        <span class="faint" id="estimate"></span>
+      </div>
+      <div class="gm-prog" id="prog" hidden><span id="progBar"></span></div>
+      <span class="faint" id="progText"></span>
+      <figure class="gm-out checker" id="outFig" hidden>
+        <img id="out" alt="Your animated GIF">
+      </figure>
+      <div class="stats" id="outStats" hidden></div>
+      <button class="btn primary" id="download" hidden><svg class="i"><use href="#i-download"/></svg>Download GIF</button>
+    </section>
+  </div>
+</main>
+<script src="gif.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

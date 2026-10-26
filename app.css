@@ -1,0 +1,27 @@
+.gm-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 900px) { .gm-grid { grid-template-columns: minmax(0, 1fr); } }
+.gm-left { gap: 14px; }
+.gm-drop { min-height: 150px; }
+#video { width: 100%; max-height: 300px; border-radius: 10px; background: #000; }
+.gm-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-2); }
+.gm-inline { white-space: nowrap; }
+#allDelay { width: 80px; padding: 6px 8px; }
+.gm-inline input[type="color"] { width: 36px; height: 30px; padding: 2px; }
+
+.gm-frames { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 10px; }
+.gm-frame { display: grid; gap: 6px; padding: 6px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); cursor: grab; }
+.gm-frame.is-drag { opacity: .45; }
+.gm-frame.is-over { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.gm-thumbbox { position: relative; height: 84px; border-radius: 8px; display: grid; place-items: center; overflow: hidden; }
+.gm-thumb { display: block; max-width: 100%; max-height: 84px; }
+.gm-num { position: absolute; top: 4px; left: 4px; min-width: 20px; padding: 1px 6px; border-radius: 999px; font: 600 11px/1.5 var(--font); background: rgba(0,0,0,.6); color: #fff; text-align: center; }
+.gm-delay { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-3); }
+.gm-delay .input { padding: 4px 6px; font-size: 12.5px; min-width: 0; width: 100%; }
+.gm-acts { display: flex; justify-content: space-between; }
+.gm-acts .btn { padding: 4px 8px; min-height: 0; }
+
+.gm-prog { height: 6px; border-radius: 6px; background: var(--surface-3); overflow: hidden; }
+.gm-prog span { display: block; height: 100%; width: 0; background: var(--accent); transition: width 120ms linear; }
+#progText:empty { display: none; }
+.gm-out { margin: 0; border-radius: 12px; border: 1px solid var(--line); display: grid; place-items: center; padding: 8px; }
+.gm-out img { display: block; max-width: 100%; max-height: 360px; image-rendering: auto; }
